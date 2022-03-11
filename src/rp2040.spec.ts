@@ -1,6 +1,6 @@
-import { BasePeripheral } from './peripherals/peripheral';
-import { RP2040 } from './rp2040';
-import { opcodeBX, opcodeMOVS, opcodeNOP, opcodePOP, opcodePUSH } from './utils/assembler';
+import { BasePeripheral } from './peripherals/peripheral.js';
+import { RP2040 } from './rp2040.js';
+import { opcodeBX, opcodeMOVS, opcodeNOP, opcodePOP, opcodePUSH } from './utils/assembler.js';
 
 const r0 = 0;
 const r4 = 4;

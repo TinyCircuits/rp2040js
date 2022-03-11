@@ -1,26 +1,26 @@
-import { IClock } from './clock/clock';
-import { RealtimeClock } from './clock/realtime-clock';
-import { GPIOPin } from './gpio-pin';
-import { IRQ, MAX_HARDWARE_IRQ } from './irq';
-import { RPADC } from './peripherals/adc';
-import { RPClocks } from './peripherals/clocks';
-import { RPDMA } from './peripherals/dma';
-import { RPI2C } from './peripherals/i2c';
-import { RPIO } from './peripherals/io';
-import { RPPADS } from './peripherals/pads';
-import { Peripheral, UnimplementedPeripheral } from './peripherals/peripheral';
-import { RPPIO } from './peripherals/pio';
-import { RPPPB } from './peripherals/ppb';
-import { RPReset } from './peripherals/reset';
-import { RP2040RTC } from './peripherals/rtc';
-import { RPSPI } from './peripherals/spi';
-import { RPSSI } from './peripherals/ssi';
-import { RP2040SysCfg } from './peripherals/syscfg';
-import { RPTimer } from './peripherals/timer';
-import { RPUART } from './peripherals/uart';
-import { RPUSBController } from './peripherals/usb';
-import { RPSIO } from './sio';
-import { ConsoleLogger, Logger, LogLevel } from './utils/logging';
+import { IClock } from './clock/clock.js';
+import { RealtimeClock } from './clock/realtime-clock.js';
+import { GPIOPin } from './gpio-pin.js';
+import { IRQ, MAX_HARDWARE_IRQ } from './irq.js';
+import { RPADC } from './peripherals/adc.js';
+import { RPClocks } from './peripherals/clocks.js';
+import { RPDMA } from './peripherals/dma.js';
+import { RPI2C } from './peripherals/i2c.js';
+import { RPIO } from './peripherals/io.js';
+import { RPPADS } from './peripherals/pads.js';
+import { Peripheral, UnimplementedPeripheral } from './peripherals/peripheral.js';
+import { RPPIO } from './peripherals/pio.js';
+import { RPPPB } from './peripherals/ppb.js';
+import { RPReset } from './peripherals/reset.js';
+import { RP2040RTC } from './peripherals/rtc.js';
+import { RPSPI } from './peripherals/spi.js';
+import { RPSSI } from './peripherals/ssi.js';
+import { RP2040SysCfg } from './peripherals/syscfg.js';
+import { RPTimer } from './peripherals/timer.js';
+import { RPUART } from './peripherals/uart.js';
+import { RPUSBController } from './peripherals/usb.js';
+import { RPSIO } from './sio.js';
+import { ConsoleLogger, Logger, LogLevel } from './utils/logging.js';
 
 export const FLASH_START_ADDRESS = 0x10000000;
 export const FLASH_END_ADDRESS = 0x14000000;
@@ -229,12 +229,41 @@ export class RP2040 {
     0x50300: this.pio[1],
   };
 
+  public onScreenAddr = (placeholder: number) => {
+    undefined;
+  };
+  public onAudioFreq = (placeholder: number) => {
+    undefined;
+  };
+  public onBrightness = (placeholder: number) => {
+    undefined;
+  };
+
   // Debugging
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public onBreak = (code: number) => {
     // TODO: raise HardFault exception
     // console.error('Breakpoint!', code);
-    this.stopped = true;
+    // console.log(code);
+
+    if (code == 27) {
+      const flashAddr = this.registers[0];
+      const ramAddr = this.registers[1] - RAM_START_ADDRESS;
+      const count = this.registers[2];
+
+      this.flash.set(this.sram.slice(ramAddr, ramAddr + count), flashAddr);
+    } else if (code == 28) {
+      this.onScreenAddr(this.registers[0]);
+    } else if (code == 29) {
+      this.onAudioFreq(this.registers[0]);
+    } else if (code == 30) {
+      this.onBrightness(this.registers[0]);
+    } else {
+      this.stopped = true;
+    }
+
+    // Copy LR to PC register
+    this.registers[15] = this.registers[14];
   };
 
   constructor(readonly clock: IClock = new RealtimeClock()) {
@@ -1591,8 +1620,15 @@ export class RP2040 {
       this.executeInstruction();
     }
     if (!this.stopped) {
-      this.executeTimer = setTimeout(() => this.execute(), 0);
+      this.executeTimer = window.setZeroTimeout(() => this.execute());
     }
+  }
+
+  start() {
+    this.clock.resume();
+    this.executeTimer = null;
+    this.stopped = false;
+    this.execute();
   }
 
   stop() {
@@ -1608,3 +1644,36 @@ export class RP2040 {
     return !this.stopped;
   }
 }
+
+declare global {
+  interface Window {
+    setZeroTimeout: any;
+  }
+}
+
+// Only add setZeroTimeout to the window object, and hide everything
+// else in a closure.
+// https://dbaron.org/log/20100309-faster-timeouts
+(function () {
+  const timeouts: any[] = [];
+  const messageName: string = 'zero-timeout-message';
+
+  function setZeroTimeout(fn: any) {
+    timeouts.push(fn);
+    window.postMessage(messageName, '*');
+  }
+
+  function handleMessage(event: any) {
+    if (event.source == window && event.data == messageName) {
+      event.stopPropagation();
+      if (timeouts.length > 0) {
+        const fn = timeouts.shift();
+        fn();
+      }
+    }
+  }
+
+  window.addEventListener('message', handleMessage, true);
+
+  window.setZeroTimeout = setZeroTimeout;
+})();

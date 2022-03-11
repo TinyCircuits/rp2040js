@@ -75,7 +75,7 @@ import {
   opcodeUDF2,
   opcodeUXTB,
   opcodeUXTH,
-} from './assembler';
+} from './assembler.js';
 
 const r0 = 0;
 const r1 = 1;

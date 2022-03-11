@@ -1,6 +1,6 @@
-import { IClockTimer } from '../clock/clock';
-import { MAX_HARDWARE_IRQ } from '../irq';
-import { BasePeripheral, Peripheral } from './peripheral';
+import { IClockTimer } from '../clock/clock.js';
+import { MAX_HARDWARE_IRQ } from '../irq.js';
+import { BasePeripheral, Peripheral } from './peripheral.js';
 
 export const VTOR = 0xd08;
 export const SHPR2 = 0xd1c;

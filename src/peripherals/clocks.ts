@@ -1,5 +1,5 @@
-import { RP2040 } from '../rp2040';
-import { BasePeripheral, Peripheral } from './peripheral';
+import { RP2040 } from '../rp2040.js';
+import { BasePeripheral, Peripheral } from './peripheral.js';
 
 const CLK_REF_SELECTED = 0x38;
 const CLK_SYS_SELECTED = 0x44;

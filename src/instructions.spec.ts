@@ -1,7 +1,7 @@
-import { createTestDriver } from '../test-utils/create-test-driver';
-import { ICortexTestDriver } from '../test-utils/test-driver';
-import { RP2040TestDriver } from '../test-utils/test-driver-rp2040';
-import { RAM_START_ADDRESS, RP2040 } from './rp2040';
+import { createTestDriver } from '../test-utils/create-test-driver.js';
+import { ICortexTestDriver } from '../test-utils/test-driver.js';
+import { RP2040TestDriver } from '../test-utils/test-driver-rp2040.js';
+import { RAM_START_ADDRESS, RP2040 } from './rp2040.js';
 import {
   opcodeADCS,
   opcodeADDreg,
@@ -82,7 +82,7 @@ import {
   opcodeUXTH,
   opcodeWFI,
   opcodeYIELD,
-} from './utils/assembler';
+} from './utils/assembler.js';
 
 const r0 = 0;
 const r1 = 1;

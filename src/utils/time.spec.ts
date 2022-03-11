@@ -1,4 +1,4 @@
-import { formatTime } from './time';
+import { formatTime } from './time.js';
 
 describe('formatTime', () => {
   it('should correctly format a timestamp with microseconds, padding with spaces', () => {

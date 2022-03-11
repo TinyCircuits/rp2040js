@@ -1,4 +1,4 @@
-import { FIFO } from './fifo';
+import { FIFO } from './fifo.js';
 
 describe('FIFO', () => {
   it('should successfully push and pull 4 items', () => {

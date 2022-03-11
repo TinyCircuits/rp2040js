@@ -1,7 +1,7 @@
-import { IRQ } from '../irq';
-import { RP2040 } from '../rp2040';
-import { FIFO } from '../utils/fifo';
-import { BasePeripheral, Peripheral } from './peripheral';
+import { IRQ } from '../irq.js';
+import { RP2040 } from '../rp2040.js';
+import { FIFO } from '../utils/fifo.js';
+import { BasePeripheral, Peripheral } from './peripheral.js';
 
 const CS = 0x00; // ADC Control and Status
 const RESULT = 0x04; // Result of most recent ADC conversion

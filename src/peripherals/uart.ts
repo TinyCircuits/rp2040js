@@ -1,6 +1,6 @@
-import { RP2040 } from '../rp2040';
-import { FIFO } from '../utils/fifo';
-import { BasePeripheral, Peripheral } from './peripheral';
+import { RP2040 } from '../rp2040.js';
+import { FIFO } from '../utils/fifo.js';
+import { BasePeripheral, Peripheral } from './peripheral.js';
 
 const UARTDR = 0x0;
 const UARTFR = 0x18;

@@ -1,5 +1,5 @@
-import { createTestDriver } from '../../test-utils/create-test-driver';
-import { ICortexTestDriver } from '../../test-utils/test-driver';
+import { createTestDriver } from '../../test-utils/create-test-driver.js';
+import { ICortexTestDriver } from '../../test-utils/test-driver.js';
 import {
   pioIN,
   pioIRQ,
@@ -36,7 +36,7 @@ import {
   PIO_SRC_X,
   PIO_SRC_Y,
   PIO_WAIT_SRC_IRQ,
-} from '../utils/pio-assembler';
+} from '../utils/pio-assembler.js';
 
 const CTRL = 0x50200000;
 const FLEVEL = 0x5020000c;
