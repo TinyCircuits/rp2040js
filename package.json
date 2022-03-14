@@ -9,7 +9,7 @@
     "emulator"
   ],
   "files": [
-    "dist"
+    "*"
   ],
   "author": "Uri Shaked <uri@wokwi.com>",
   "license": "MIT",
