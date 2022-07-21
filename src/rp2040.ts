@@ -238,6 +238,9 @@ export class RP2040 {
   public onBrightness = (placeholder: number) => {
     undefined;
   };
+  public onUpdate = () => {
+    undefined;
+  };
 
   // Debugging
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -246,7 +249,9 @@ export class RP2040 {
     // console.error('Breakpoint!', code);
     // console.log(code);
 
-    if (code == 27) {
+    if(code == 31){
+      this.onUpdate();
+    }if (code == 27) {
       const flashAddr = this.registers[0];
       const ramAddr = this.registers[1] - RAM_START_ADDRESS;
       const count = this.registers[2];
